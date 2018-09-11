@@ -19,7 +19,7 @@ import sys
 import os
 import datetime
 
-__author__ = "Sanika Dongre"
+__author__ = "Sa"
 __copyright__ = "Copyright (C) 2018 by Sanika Dongre"
 #
 # Redistribution, modification or use of this software in source or binary
