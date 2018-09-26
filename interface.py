@@ -8,9 +8,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Display(object):
+class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        Dialog.setObjectName("Display")
+        Dialog.setObjectName("Dialog")
         Dialog.resize(899, 635)
         Dialog.setMaximumSize(QtCore.QSize(16777215, 16777215))
         Dialog.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -83,8 +83,8 @@ class Ui_Display(object):
         self.pushButton_4 = QtWidgets.QPushButton(Dialog)
         self.pushButton_4.setGeometry(QtCore.QRect(490, 210, 101, 31))
         self.pushButton_4.setObjectName("pushButton_4")
-        
-        self.retranslateUi(DisplayWindow)
+
+       self.retranslateUi(DisplayWindow)
         QtCore.QMetaObject.connectSlotsByName(DisplayWindow)
 
     def retranslateUi(self, DisplayWindow):
@@ -98,3 +98,4 @@ class Ui_Display(object):
         self.Refresh_PB.setText(_translate("DisplayWindow", "Refresh", None))
         self.alarm_display_label.setText(_translate("DisplayWindow", "Set Humidity Alarm", None))
         self.alarm_display_label_2.setText(_translate("DisplayWindow", "Set Temp Alarm", None))
+
