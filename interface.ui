@@ -1,29 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
++?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DisplayWindow</class>
- <widget class="QMainWindow" name="DisplayWindow">
+ <class>Display</class>
+ <widget class="QDisplayWindow" name="Display">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
-    <height>381</height>
+    <width>780</width>
+    <height>390</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Temperature &amp; Humidity Display </string>
+   <string>Temperature &amp; Humidity denote </string>
   </property>
-  <property name="dockNestingEnabled">
+  <property name="EnablingNesting">
    <bool>false</bool>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="Time_Label">
+  <widget class="QLine" name="optval">
+   <widget class="QLabel" name="Timetag">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>140</y>
-      <width>68</width>
-      <height>17</height>
+      <x>330</x>
+      <y>165</y>
+      <width>64</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="font">
@@ -33,17 +34,17 @@
       <bold>false</bold>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>Time</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Time_Value">
+   <widget class="QLabel" name="timelabel">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>140</y>
-      <width>271</width>
-      <height>20</height>
+      <x>410</x>
+      <y>116</y>
+      <width>246</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
@@ -51,17 +52,17 @@
       <pointsize>14</pointsize>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>0.00</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Temperature_Label">
+   <widget class="QLabel" name="labeltemp">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>79</y>
-      <width>121</width>
-      <height>21</height>
+      <x>250</x>
+      <y>74</y>
+      <width>115</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="font">
@@ -69,19 +70,18 @@
       <pointsize>14</pointsize>
       <weight>50</weight>
       <italic>false</italic>
-      <bold>false</bold>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>Temperature</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Humidity_Label">
+   <widget class="QLabel" name="Humiditylabel">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>110</y>
-      <width>81</width>
+      <x>250</x>
+      <y>95</y>
+      <width>84</width>
       <height>21</height>
      </rect>
     </property>
@@ -89,20 +89,19 @@
      <font>
       <pointsize>14</pointsize>
       <weight>50</weight>
-      <bold>false</bold>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>Humidity</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Humidity_Value">
+   <widget class="QLabel" name="Humidityval">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>110</y>
-      <width>281</width>
-      <height>20</height>
+      <x>450</x>
+      <y>95</y>
+      <width>250</width>
+      <height>15</height>
      </rect>
     </property>
     <property name="font">
@@ -110,17 +109,17 @@
       <pointsize>14</pointsize>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>0.00</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Temperature_Value">
+   <widget class="QLabel" name="Temperatureval">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>450</x>
       <y>80</y>
-      <width>271</width>
-      <height>20</height>
+      <width>252</width>
+      <height>18</height>
      </rect>
     </property>
     <property name="font">
@@ -128,91 +127,89 @@
       <pointsize>14</pointsize>
      </font>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>0.00</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Refresh_PB">
+   <widget class="QPushButton" name="Pressbuttonrf">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>250</y>
-      <width>99</width>
-      <height>27</height>
+      <x>350</x>
+      <y>190</y>
+      <width>95</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="text">
+    <property name="textinput">
      <string>Refresh</string>
     </property>
    </widget>
-   <widget class="QLabel" name="alarm_display_label">
+   <widget class="QLabel" name="alarmlabel">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>170</y>
-      <width>201</width>
-      <height>20</height>
+      <x>240</x>
+      <y>145</y>
+      <width>185</width>
+      <height>18</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>14</pointsize>
       <weight>50</weight>
-      <bold>false</bold>
      </font>
     </property>
-    <property name="text">
-     <string>Set Humidity Alarm</string>
+    <property name="textinput">
+     <string>Alarm set humidity</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>170</y>
-      <width>113</width>
-      <height>27</height>
+      <x>450</x>
+      <y>145</y>
+      <width>107</width>
+      <height>24</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="alarm_display_label_2">
+   <widget class="QLabel" name="alarmdisp_label">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>200</y>
-      <width>201</width>
-      <height>20</height>
+      <x>250</x>
+      <y>175</y>
+      <width>165</width>
+      <height>18</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>14</pointsize>
       <weight>50</weight>
-      <bold>false</bold>
      </font>
     </property>
-    <property name="text">
-     <string>Set Temp Alarm</string>
+    <property name="textinput">
+     <string>Alarm set temperature</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="Editerline">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>200</y>
-      <width>113</width>
-      <height>27</height>
+      <x>450</x>
+      <y>180</y>
+      <width>107</width>
+      <height>22</height>
      </rect>
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QMenuBar" name="menubardisp">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>774</width>
-     <height>27</height>
+     <width>730</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
