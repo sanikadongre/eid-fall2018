@@ -8,16 +8,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(899, 635)
-        Dialog.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        Dialog.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        Dialog.setMouseTracking(False)
-        self.line = QtWidgets.QFrame(Dialog)
-        self.line.setGeometry(QtCore.QRect(440, 0, 16, 641))
-        self.line.setFrameShape(QtWidgets.QFrame.VLine)
+class Ui_Display(object):
+    def setupUi(self, Display):
+        Display.setObjectName("Display")
+        Display.resize(780, 390)
+        Display.setEnablingNesting(False)
+        #Dialog.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        #Dialog.setMouseTracking(False)
+        self.optval = QtGui.QWidget(Display)
+        self.optval = setObjectName(_fromUtf8("optval"))
+        self.Timetag = (QtGui.QLabel(self.optval))
+        self.Timetag.setGeometry(QtCore, QRect(330,165,64,16))
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
         self.label = QtWidgets.QLabel(Dialog)
