@@ -8,9 +8,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
+class Ui_Display(object):
     def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
+        Dialog.setObjectName("Display")
         Dialog.resize(899, 635)
         Dialog.setMaximumSize(QtCore.QSize(16777215, 16777215))
         Dialog.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
