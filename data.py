@@ -3,58 +3,58 @@ import sys
 import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.QtCore import QTimer
-from myqt import Ui_Dialog
+from version1_qt import Ui_Dialog
 import datetime
-import matplotlib.pyplot as plt
 import numpy
-
-counter = 1,
-total_temp = 0,
-total_humid = 0,
-avg_temp,
-avg_humid,
-temp_const = 73,
-humid_const = 50
 
 class AppWindow(QDialog):
     def __init__(self):
-        super().__init__()
-        self.ui= Ui_Dialog()
+        super(AppWindow,self).__init__()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+        self.avg_humid=0
+        self.avg_temp=0
+        self.avg_counter=0
+        self.temp_const= 40
+        self.humid_const = 56
+        self.separator = ','
     def sensor_data(self):
         humidity, temperature = Adafruit_DHT.read_retry(22,4)
         if humidity is not None and temperature is not None:
+            self.ui.lineEdit.setText('connected')
             print('Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity))
-            #temp_data = '{0:.4f}'.format(temperature)
-           #humid_data = '{0:.4f}'.format(humidity)
-            total_temp = total_temp + temperature
-            total_humid = total_humid + humidity
-            avg_temp = total_temp/counter
-            avg_humid = total_humid/counter
-            counter = counter + 1
-            with open('sensor_values.csv', 'a', newline='')as csv_file:
-                csvWriter = csv.writer(csv_file, delimeter = ',')
-                #csvWriter.writerow([temp_data, humid_data])
-            #self.lineEdit.setText(temp_data)
-            #self.lineEdit_2.setText(humid_data)
-            alarm_set(temperature, humidity)  
-            self.progressBar.setValue(float(temperature))
-            self.progressBar_2.setValue(float(humidity))
+            temp_data = '{0:.1f}'.format(temperature)
+            humid_data = '{0:.1f}'.format(humidity)
+            self.avg_temp = ((self.avg_temp) * self.avg_counter + temperature)/(self.avg_counter+1)
+            self.avg_humid = ((self.avg_humid) * self.avg_counter  + humidity) / (self.avg_counter+1)
+            self.avg_counter += 1
+            self.ui.lcdNumber.display(temp_data)
+            self.ui.lcdNumber_2.display(humid_data)
+            self.ui.lcdNumber_3.display(self.avg_temp)
+            self.ui.lcdNumber_4.display(self.avg_humid)
+            #with open('sensor_values.csv', 'a', newline='')as csv_file:
+              #  csvWriter = csv.writer(csv_file, self.separator)
+               # csvWriter.writerow([temp_data, humid_data])
+            if(temperature > (self.temp_const)):
+               self.ui.graphicsView.setStyleSheet("background: red")
+            else:
+               self.ui.graphicsView.setStyleSheet("background: green")
+            if(humidity > (self.humid_const)):
+               self.ui.graphicsView_2.setStyleSheet("background: red")
+            else:
+               self.ui.graphicsView_2.setStyleSheet("background: green")
+               
+
             timenow = datetime.datetime.now()
-            print(timenow.strftime("%m/%d/%Y %H:%M"))
-            self.lineEdit_4.setText(timenow.strftime("%m%d%Y %H:%M"))
+            print(timenow.strftime("%m/%d/%Y %H:%M:%S"))
+            self.ui.lineEdit_2.setText(timenow.strftime("%m/%d/%Y %H:%M:%S"))
         else:
-            print('Failed to get reading. Try again!')
-        self.sensor_data
-        self.pushButton.clicked.connect(self.lineEdit.clear)
-        self.pushButton_2.clicked.connect(self.lineEdit.clear)
-        self.pushButton.clicked.connect(self.progressBar.reset)
-        self.pushButton.clicked.connect(self.progressBar_2.reset)
-        self.clock.timeout.connect(self.timenow)
-        self.clock.start(5000)
-        self.lineEdit.setText(temperature)
-        self.lineEdit_2.setText(humidity)
+            print('Failed to get reading. Please Try again!')
         
+    def reset_but(self):
+        self.ui.pushButton_2.clicked.connect(self.sensor_data)
+          
+                                           
     def hum_graph(self):
         gr_temp, gr_humid = numpy.loadtxt('sensor_values.csv', spacer = ',', unpack = true)
         humid_len = len(gr_humid)
@@ -67,7 +67,7 @@ class AppWindow(QDialog):
         temp, humid = Adafruit_DHT.read_retry(22,4)
         if humid is None and temp is None:
             print('Sensor is not connected')
-            
+            self.ui.lineEdit.setText('not connected')
     def temp_graph(self):
         gr_temp, gr_humid = numpy.loadtxt('sensor_values.csv', spacer = ',', unpack = true)
         temp_len = len(gr_temp)
@@ -75,23 +75,15 @@ class AppWindow(QDialog):
         plt.xlabel('Values of Intervals')
         plt.plot(x_axis, gr_temp)
         plt.ylabel('Values of Temp')
-        
-    def alarm_set(temp_get, humid_get):
-        if(temp_get > float(temp_const)):
-               self.graphicsView.setStyleSheet("background: yellow")
-        else:
-               self.graphicsView.setStyleSheet("background: green")
-        if(humid_get > float(humid_const)):
-               self.graphicsView.setStyleSheet("background: red")
-        else:
-               self.graphicsView.setStyleSheet("background: blue")
-               
+     
+     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    Dialog = QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
-    
-    
+    xyz = AppWindow()
+    xyz.sensor_data()
+    xyz.reset_but()
+    xyz.show()
+    try:
+        sys.exit(app.exec_())
+    except:
+        None
