@@ -12,9 +12,8 @@ import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QDialog
 from version1_qt import Ui_Dialog
-#import matplotlib.pyplot as plt
-#import matplotlib.dates as matdates
-#import pandas as ps
+from matplotlib.pyplot import *
+from numpy import *
 import datetime
 
 
@@ -28,9 +27,25 @@ class AppWindow(QDialog):
         self.avg_counter=0
         self.temp_const= 40
         self.humid_const = 56
+        self.list_temp = []
+        self.list_hum = []
+        try:
+            with open('sensor_values.csv', 'r') as f:
+                reader = csv.reader(f)
+                list_read = list(reader)
+        except:
+            None
+        for k in list_read:
+            self.list_temp.append(k[0])
+            self.list_hum.append(k[1])
+        
+        for k in range(len(self.list_temp)):
+            self.avg_temp = ((self.avg_temp) * self.avg_counter + float(self.list_temp[k]))/(self.avg_counter+1)
+            self.avg_humid = ((self.avg_humid) * self.avg_counter + float(self.list_hum[k]))/(self.avg_counter+1)
+            self.avg_counter+=1            
         
     def sensor_data(self):
-        humidity, temperature = Adafruit_DHT.read_retry(22,4)
+        humidity, temperature = Adafruit_DHT.read_retry(22,4,10,0.1)
         #Reading the temperature and humidity values
         if humidity is not None and temperature is not None:
             self.ui.lineEdit.setText('connected')
@@ -55,9 +70,15 @@ class AppWindow(QDialog):
             with open('sensor_values.csv', 'a', newline='')as csv_file:
                csv_writer = csv.writer(csv_file, delimiter = ',', quotechar = '|', quoting=csv.QUOTE_MINIMAL)
                csv_writer.writerow([temp_data, humid_data])
-               
-              #pyqt official site for widget colour change
-               #For Alarm Set
+            
+            #Graph plot
+            self.list_temp.append(temp_data)
+            self.list_hum.append(humid_data)
+            self.ui.pushButton_4.clicked.connect(self.hum_graph)
+            self.ui.pushButton.clicked.connect(self.temp_graph)
+            
+            #pyqt official site for widget colour change
+            #For Alarm Set
             if(temperature > (self.temp_const)):
                self.ui.graphicsView.setStyleSheet("background: red")
             else:
@@ -70,6 +91,9 @@ class AppWindow(QDialog):
         else:
             #Data can't be read/ Sensor disconnected
             print('Failed to get reading. Please Try again!')
+            print('Sensor is not connected')
+            self.ui.lineEdit.setText('not connected')
+            
         
     def reset_but(self):
         #reset button condition to get new values
@@ -78,29 +102,18 @@ class AppWindow(QDialog):
                                            
     def hum_graph(self):
         #for displaying the graph for humidity values
-        gr_temp, gr_humid = numpy.loadtxt('sensor_values.csv', spacer = ',', unpack = true)
-        humid_len = len(gr_humid)
-        x_axis = range(0, humid_len)
-        plt.xlabel('Values of Intervals')
-        plt.plot(x_axis, gr_humid)
-        plt.ylabel('Values of Humidity')
-    
-    def sensor_not_connected(self):
-        temp, humid = Adafruit_DHT.read_retry(22,4)
-        if humid is None and temp is None:
-            #The sensor is not connected
-            print('Sensor is not connected')
-            self.ui.lineEdit.setText('not connected')
+        matplotlib.pyplot.plot(range(len(self.list_hum)), self.list_hum)
+        matplotlib.pyplot.xlabel('Values of Intervals')
+        matplotlib.pyplot.ylabel('Values of Humidity')
+        matplotlib.pyplot.show()
+           
             
     def temp_graph(self):
         #for displaying the graph for temperature values
-        gr_temp, gr_humid = numpy.loadtxt('sensor_values.csv', spacer = ',', unpack = true)
-        temp_len = len(gr_temp)
-        x_axis = range(0, temp_len)
-        plt.xlabel('Values of Intervals')
-        plt.plot(x_axis, gr_temp)
-        plt.ylabel('Values of Temp')
-     
+        matplotlib.pyplot.plot(range(len(self.list_temp)), self.list_temp)
+        matplotlib.pyplot.xlabel('Values of Intervals')
+        matplotlib.pyplot.ylabel('Values of Temperature')
+        matplotlib.pyplot.show()
      
 if __name__ == '__main__':
     app = QApplication(sys.argv)
