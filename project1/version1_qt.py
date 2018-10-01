@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
+        Dialog.setWindowModality(QtCore.Qt.NonModal)
         Dialog.resize(900, 921)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
@@ -19,6 +20,7 @@ class Ui_Dialog(object):
         Dialog.setFont(font)
         Dialog.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         Dialog.setMouseTracking(True)
+        Dialog.setModal(False)
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(40, 160, 61, 21))
         font = QtGui.QFont()
@@ -81,9 +83,11 @@ class Ui_Dialog(object):
         self.lcdNumber_4.setObjectName("lcdNumber_4")
         self.lineEdit = QtWidgets.QLineEdit(Dialog)
         self.lineEdit.setGeometry(QtCore.QRect(210, 150, 201, 33))
+        self.lineEdit.setReadOnly(True)
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit_2 = QtWidgets.QLineEdit(Dialog)
         self.lineEdit_2.setGeometry(QtCore.QRect(160, 220, 271, 33))
+        self.lineEdit_2.setReadOnly(True)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.graphicsView = QtWidgets.QGraphicsView(Dialog)
         self.graphicsView.setGeometry(QtCore.QRect(210, 400, 171, 21))

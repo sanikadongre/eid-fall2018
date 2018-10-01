@@ -12,11 +12,31 @@ import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QDialog
 from version1_qt import Ui_Dialog
+from login import Ui_user_login
 from matplotlib.pyplot import *
 from numpy import *
 import datetime
 
-
+#Login Window setup
+class LoginWindow(QDialog):
+    def __init__(self):
+        super(LoginWindow,self).__init__()
+        self.lu = Ui_user_login()
+        self.lu.setupUi(self)
+        self.lu.lineEdit.setText('Enter username here')
+        self.show()
+        self.lu.pushButton.clicked.connect(self.login)
+        
+        
+    def login(self):
+        None
+        user_identity = self.lu.lineEdit.text()
+        if((user_identity) != 'sanika' or (user_identity) == 'SANIKA' or (user_identity) == 'Sanika'):
+            self.lu.graphicsView.setStyleSheet("background: red")
+        else:
+            self.lu.graphicsView.setStyleSheet("background: green")
+            self.accept()
+           
 class AppWindow(QDialog):
     def __init__(self):
         super(AppWindow,self).__init__()
@@ -118,10 +138,12 @@ class AppWindow(QDialog):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     xyz = AppWindow()
-    xyz.sensor_data()
-    xyz.reset_but()
-    xyz.show()
-    try:
-        sys.exit(app.exec_())
-    except:
-        None
+    user = LoginWindow()
+    if user.exec_() == QtWidgets.QDialog.Accepted:
+       xyz.sensor_data()
+       xyz.reset_but()
+       xyz.show()
+       try:
+           sys.exit(app.exec_())
+       except:
+           None
