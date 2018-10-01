@@ -5,6 +5,10 @@
 #reference for csv storage: https://realpython.com/python-csv
 #pyqt official site for widget colour change
 #pyqt tutorials
+#reference for reading csv file in a list: https://stackoverflow.com/questions/24662571/python-import-csv-to-list
+#Reference for map plotting: https://www.youtube.com/watch?v=aS4WlOJQ4mQ
+#Reference for date time https://docs.python.org/3/library/datetime.html
+#Reference for user login window: https://stackoverflow.com/questions/11812000/login-dialog-pyqt
 
 import Adafruit_DHT
 import sys
@@ -31,7 +35,7 @@ class LoginWindow(QDialog):
     def login(self):
         None
         user_identity = self.lu.lineEdit.text()
-        if((user_identity) != 'sanika' or (user_identity) == 'SANIKA' or (user_identity) == 'Sanika'):
+        if((user_identity) != 'sanika'):
             self.lu.graphicsView.setStyleSheet("background: red")
         else:
             self.lu.graphicsView.setStyleSheet("background: green")
@@ -50,11 +54,13 @@ class AppWindow(QDialog):
         self.list_temp = []
         self.list_hum = []
         try:
+           #Reference: https://stackoverflow.com/questions/24662571/python-import-csv-to-list
             with open('sensor_values.csv', 'r') as f:
                 reader = csv.reader(f)
                 list_read = list(reader)
         except:
             None
+            #Finding running average of data read from csv file in list
         for k in list_read:
             self.list_temp.append(k[0])
             self.list_hum.append(k[1])
@@ -81,6 +87,7 @@ class AppWindow(QDialog):
             self.ui.lcdNumber_4.display(self.avg_humid)
             
             #To display the date and time in hours, minutes, seconds
+            #https://docs.python.org/3/library/datetime.html
             timenow = datetime.datetime.now()
             print(timenow.strftime("%m/%d/%Y %H:%M:%S"))
             self.ui.lineEdit_2.setText(timenow.strftime("%m/%d/%Y %H:%M:%S"))
@@ -118,7 +125,8 @@ class AppWindow(QDialog):
     def reset_but(self):
         #reset button condition to get new values
         self.ui.pushButton_2.clicked.connect(self.sensor_data)
-          
+        
+        #Reference for map plotting: https://www.youtube.com/watch?v=aS4WlOJQ4mQ   
                                            
     def hum_graph(self):
         #for displaying the graph for humidity values
