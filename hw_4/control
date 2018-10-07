@@ -1,0 +1,9 @@
+Package: node
+Priority: extra
+Section: checkinstall
+Installed-Size: 34396
+Maintainer: nathanjohnson320@gmail.com
+Architecture: armhf
+Version: 4.2.1-1
+Provides: node
+Description: node v4.2.1
