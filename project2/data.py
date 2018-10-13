@@ -175,18 +175,25 @@ class AppWindow(QDialog):
                                            
     def hum_graph(self):
         #for displaying the graph for humidity values
+        fig1 = matplotlib.pyplot.figure(1)
         matplotlib.pyplot.plot(range(len(self.list_hum)), self.list_hum)
+        matplotlib.pyplot.title('Humidity graph')
         matplotlib.pyplot.xlabel('Values of Intervals')
         matplotlib.pyplot.ylabel('Values of Humidity')
-        matplotlib.pyplot.show()
+        fig1.savefig('humidity_plot.jpg')
+       # matplotlib.pyplot.show()
            
             
     def temp_graph(self):
         #for displaying the graph for temperature values
+        fig2 = matplotlib.pyplot.figure(2)
         matplotlib.pyplot.plot(range(len(self.list_temp)), self.list_temp)
+        matplotlib.pyplot.title('Temp graph')
         matplotlib.pyplot.xlabel('Values of Intervals')
         matplotlib.pyplot.ylabel('Values of Temperature')
-        matplotlib.pyplot.show()
+        fig2.savefig('temperature_plot.jpg')
+       
+        #matplotlib.pyplot.show()
      
 if __name__ == '__main__':
     app = QApplication(sys.argv)
