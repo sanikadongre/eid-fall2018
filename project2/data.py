@@ -181,7 +181,6 @@ class AppWindow(QDialog):
         matplotlib.pyplot.xlabel('Values of Intervals')
         matplotlib.pyplot.ylabel('Values of Humidity')
         fig1.savefig('humidity_plot.jpg')
-       # matplotlib.pyplot.show()
            
             
     def temp_graph(self):
@@ -193,7 +192,6 @@ class AppWindow(QDialog):
         matplotlib.pyplot.ylabel('Values of Temperature')
         fig2.savefig('temperature_plot.jpg')
        
-        #matplotlib.pyplot.show()
      
 if __name__ == '__main__':
     app = QApplication(sys.argv)
