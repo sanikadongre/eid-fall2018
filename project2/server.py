@@ -34,8 +34,8 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 application = tornado.web.Application([
     (r'/ws', WSHandler),
-        (r"/(humidity_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
-        (r"/(temperature_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'})
+    (r"/(humidity_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
+    (r"/(temperature_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'})
 ])
                                                                                                                                                                                               
 def data_sensor(message):
