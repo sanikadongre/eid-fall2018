@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Temperature and Humidity </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="style_client.css">
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body>
+    <h1 id="Heading">Weather Monitoring</h1>
+    <div id="connection_details">
+      <label for="temp_level" id="temp_level_label">Temperature:</label>
+      <output type="text" id="temp_level"></output><br />
+      <label for="temp_level" id="time_label">Temptime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="hum_level" id="hum_level_label">Humidity:</label>
+      <output type="text" id="hum_level"></output><br />
+      <label for="hum_level" id="time_label">humidtime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="avg_temp" id="avg_temp_label">Average_Temp:</label>
+      <output type="text" id="avg_temp"></output> <br />
+      <label for="avg_temp" id="time_label">avgtemptime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="avg_hum" id="avg_hum_label">Average_Humid:</label>
+      <output type="text" id="avg_hum"></output> <br />
+      <label for="avg_hum" id="time_label">avghumtime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="max_temp" id="max_temp_label">Max_Temp:</label>
+      <output type="text" id="max_temp"></output> <br />
+      <label for="max_temp" id="time_label">maxtemptime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="max_hum" id="max_hum_label">Max_humid:</label>
+      <output type="text" id="max_hum"></output> <br />
+      <label for="max_hum" id="time_label">maxhumidtime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="min_temp" id="min_temp_label">Minimum_Temp:</label>
+      <output type="text" id="min_temp"></output> <br />
+      <label for="min_temp" id="time_label">mintemptime:</label>
+      <output type="text" id="time_stamp"></output> <br />
+      <label for="min_hum" id="min_hum_label">Minimum_Humid:</label>
+      <output type="text" id="min_hum"></output> <br />
+      <!-- <label for="min_hum" id="date_label">Date on Server:</label> -->
+      <!-- <output type="text" id="date_box"></output> <br /> -->
+
+      <input type="submit" id="get_temp" value="Temp" />
+      <input type="submit" id="get_humidity" value="Humid" />
+      <input type="submit" id="get_avg_temp" value="AvgTemp" />
+      <input type="submit" id="get_avg_hum" value="AvgHumid" />
+      <input type="submit" id="get_max_temp" value="MaxTemp" />
+      <input type="submit" id="get_max_hum" value="MaxHumidity" />
+      <input type="submit" id="get_min_temp" value="MinTemp" />
+      <input type="submit" id="get_min_hum" value="MinHumidity" />
+      <input type="submit" id="C" value="unit C" />
+      <input type="submit" id="C" value="unit C" />
+      <input type="submit" id="F" value="unit F" />
+      <input type="submit" id="F" value="unit F" />
+      <input type="submit" id="plot" value="PlotGraph" />
+    </div>
+
+    <div id="terminal">
+
+    </div>
+  </body>
+</html>
