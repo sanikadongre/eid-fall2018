@@ -9,47 +9,60 @@ import csv
 import datetime
 import socket
 
+
+'''
+This is a simple Websocket Echo server that uses the Tornado websocket handler.
+Please run `pip install tornado` with python of version 2.7.9 or greater to install tornado.
+This program will echo back the reverse of whatever it recieves.
+Messages are output to the terminal for debuggin purposes.
+'''
+
 class WSHandler(tornado.websocket.WebSocketHandler):
-    def open_sock(self):
-        print('The setup connection')
-    def msg_send_recv(self):
-        print('client request: %s' %msg)
-        self.write_message(msg + '-' + str(database(msg)))
-    def close_sock(self):
-        print('The connection is closed')
-    def check_condition(self):
+    def open(self):
+        print ('new connection')
+   def on_message(self, message):
+        print ('message received:  %s' % message)
+        # Reverse Message and send it back
+        print ('sending back message: %s' % message)
+        self.write_message(message + '-' + str(data_sensor(message)))
+
+    def on_close(self):
+        print ('connection closed')
+
+    def check_origin(self, origin):
         return True
-    application = tornado.web.Application([
-        (r'/ws', WSHandler),
+
+application = tornado.web.Application([
+    (r'/ws', WSHandler),
         (r"/(humidity_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
         (r"/(temperature_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'})
     ])
                                                                                                                                                                                               
-    def data_sensor(msg):
+    def data_sensor(message):
         get_csv_file = open('sensor_values.csv', 'r')
         end = get_csv_file.readlines()[-1]
         temp_get = end.split(",")
         if(temp_get[0] == 0 or temp_get[2] == 0 or temp_get[4] == 0 or temp_get[6] == 0 or temp_get[8] == 0 or temp_get[5] == 0 or temp_get[10] == 0 or temp_get[12] == 0 or temp_get[14] == 0 or temp_get[1] == 0 or temp_get[3] == 0 or temp_get[5] == 0 or temp_get[7] == 0 or temp_get[9] == 0 or temp_get[11] == 0 or temp_get[13] == 0 or temp_get[15] == 0):
             return 'ERROR'
-        if(msg == 'present_temp'):
+        if(message == 'present_temp'):
             return temp_get[0] + '-' + temp_get[1] + 'hours'
-        elif (msg == 'present_humidity'):
+        elif (message == 'present_humidity'):
             return temp_get[2] + '-' + temp_get[3] + 'hours'
-        elif (msg == 'avg_temp'):
+        elif (message == 'avg_temp'):
             return temp_get[4] + '-' + temp_get[5] + 'hours'
-        elif (msg == 'avg_humid'):
+        elif (message == 'avg_humid'):
             return temp_get[6] + '-' + temp_get[7] + 'hours'
-        elif (msg == 'Max_temp'):
+        elif (message == 'Max_temp'):
             return temp_get[8] + '-' + temp_get[9] + 'hours'
-        elif (msg == 'Max_humid'):
+        elif (message == 'Max_humid'):
             return temp_get[10] + '-' + temp_get[11] + 'hours'
-        elif (msg == 'Min_temp'):
+        elif (message == 'Min_temp'):
             return temp_get[12] + '-' + temp_get[13] + 'hours'
-        elif (msg == 'Min_humid'):
+        elif (message == 'Min_humid'):
             return temp_get[14] + '-' + temp_get[15] + 'hours'
-        elif (msg == 'graph_humidity'):
+        elif (message == 'graph_humidity'):
             return humidity_url
-        elif (msg == 'graph_temperature'):
+        elif (message == 'graph_temperature'):
             return temperature_url
         else:
             return 'The input is invalid'
