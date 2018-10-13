@@ -68,11 +68,11 @@ application = tornado.web.Application([
             return 'The input is invalid'
         
 if __name__ == "__main__":
-    server = tornado.httpserver.HTTPServer(application)
-    ip = '10.0.0.224'
+    http_server = tornado.httpserver.HTTPServer(application)
+    myIP = '10.0.0.224'
     port = 8888
-    humidity_url = 'http://' + ip + ':' + str(port) + '/humidity_plot.jpg'
-    temperature_url = 'http://' + ip + ':' + str(port) + '/temperature_plot.jpg'
-    server.listen(8888, address= '10.0.0.224')
-    print(' *** Websocket Server Started at %s***' %ip)
+    hum_url = 'http://' + myIP + ':' + str(port) + '/humid_plot.jpg'
+    temp_url = 'http://' + myIP + ':' + str(port) + '/temp_plot.jpg'
+    http_server.listen(8888, address='10.0.0.224')
+    print ('*** Websocket Server Started at %s***' % myIP)
     tornado.ioloop.IOLoop.instance().start()
