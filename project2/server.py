@@ -1,14 +1,14 @@
+import matplotlib.pyplot as plt
+import tornado.httpserver
 import tornado.websocket
-from tornado.websocket import *
 import tornado.ioloop
 import tornado.web
-from matplotlib.pyplot import *
+import matplotlib
 import numpy
-import tornado.httpserver
-import csv
-import datetime
 import socket
-
+import datetime
+import numpy as np
+import csv
 
 '''
 This is a simple Websocket Echo server that uses the Tornado websocket handler.
@@ -20,11 +20,12 @@ Messages are output to the terminal for debuggin purposes.
 class WSHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print ('new connection')
+
     def on_message(self, message):
         print ('message received:  %s' % message)
         # Reverse Message and send it back
         print ('sending back message: %s' % message)
-        self.write_message(message + '-' + str(data_sensor(message)))
+        self.write_message(message + '-' + str(get_data(message)))
 
     def on_close(self):
         print ('connection closed')
@@ -34,45 +35,47 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 application = tornado.web.Application([
     (r'/ws', WSHandler),
-    (r"/(humidity_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
-    (r"/(temperature_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'})
+    (r"/(humid_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'}),
+    (r"/(temp_plot.jpg)", tornado.web.StaticFileHandler, {'path':'./'})
 ])
-                                                                                                                                                                                              
-def data_sensor(message):
-    get_csv_file = open('sensor_values.csv', 'r')
-    end = get_csv_file.readlines()[-1]
-    temp_get = end.split(",")
-    if(temp_get[0] == 0 or temp_get[2] == 0 or temp_get[4] == 0 or temp_get[6] == 0 or temp_get[8] == 0 or temp_get[5] == 0 or temp_get[10] == 0 or temp_get[12] == 0 or temp_get[14] == 0 or temp_get[1] == 0 or temp_get[3] == 0 or temp_get[5] == 0 or temp_get[7] == 0 or temp_get[9] == 0 or temp_get[11] == 0 or temp_get[13] == 0 or temp_get[15] == 0):
+
+def get_data(message):
+    csv_file = open('temphumid_data.csv', 'r')
+    lastline = csv_file.readlines()[-1]
+    temp = lastline.split(",")
+    if (temp[0]==0 or temp[1]==0 or temp[2]==0 or temp[3]==0 or temp[4]==0 or temp[5]==0 or temp[6]==0 or temp[7]==0):
         return 'ERROR'
-    if(message == 'present_temp'):
-        return temp_get[0] + '-' + temp_get[1] + 'hours'
-    elif (message == 'present_humidity'):
-        return temp_get[2] + '-' + temp_get[3] + 'hours'
+    if (message == 'current_hum'):
+        return temp[0] + '-' + temp[8] + 'hrs'
+    elif (message == 'current_temp'):
+        return temp[1] + '-' + temp[8] + 'hrs'
+    elif (message == 'avg_hum'):
+        return temp[2] + '-' + temp[8] + 'hrs'
     elif (message == 'avg_temp'):
-        return temp_get[4] + '-' + temp_get[5] + 'hours'
-    elif (message == 'avg_humid'):
-        return temp_get[6] + '-' + temp_get[7] + 'hours'
-    elif (message == 'Max_temp'):
-        return temp_get[8] + '-' + temp_get[9] + 'hours'
-    elif (message == 'Max_humid'):
-        return temp_get[10] + '-' + temp_get[11] + 'hours'
-    elif (message == 'Min_temp'):
-        return temp_get[12] + '-' + temp_get[13] + 'hours'
-    elif (message == 'Min_humid'):
-        return temp_get[14] + '-' + temp_get[15] + 'hours'
-    elif (message == 'graph_humidity'):
-        return humidity_url
-    elif (message == 'graph_temperature'):
-        return temperature_url
+        return temp[3] + '-' + temp[8] + 'hrs'
+    elif (message == 'max_hum'):
+        return temp[4] + '-' + temp[8] + 'hrs'
+    elif (message == 'max_temp'):
+        return temp[5] + '-' + temp[8] + 'hrs'
+    elif (message == 'min_hum'):
+        return temp[6] + '-' + temp[8] + 'hrs'
+    elif (message == 'min_temp'):
+        return temp[7] + '-' + temp[8] + 'hrs'
+    elif (message == 'graph_hum'):
+        return hum_url
+    elif (message == 'graph_temp'):
+        return temp_url
     else:
-        return 'The input is invalid'
-        
+        return 'Invalid input'
+
+
+
 if __name__ == "__main__":
     http_server = tornado.httpserver.HTTPServer(application)
-    myIP = '10.0.0.224'
+    myIP = '10.0.0.180'
     port = 8888
     hum_url = 'http://' + myIP + ':' + str(port) + '/humid_plot.jpg'
     temp_url = 'http://' + myIP + ':' + str(port) + '/temp_plot.jpg'
-    http_server.listen(8888, address='10.0.0.224')
+    http_server.listen(8888, address='10.0.0.180')
     print ('*** Websocket Server Started at %s***' % myIP)
     tornado.ioloop.IOLoop.instance().start()
