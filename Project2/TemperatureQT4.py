@@ -236,12 +236,12 @@ class Ui_TemperatureQT(object):
         i = range(0,len(x))
         fig1 = mplot.figure(1)
         mplot.plot(i,x,'b')
-        mplot.title('Humidity Variation Graph')
+        mplot.title('Humidity Graph')
         fig1.savefig('humid_plot.jpg')
 
         fig2 = mplot.figure(2)
         mplot.plot(i,y,'r')
-        mplot.title('Temperature Variation Graph')
+        mplot.title('Temperature Graph')
         fig2.savefig('temp_plot.jpg')
 
     def plot_clicked(self):
