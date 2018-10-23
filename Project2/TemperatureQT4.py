@@ -5,6 +5,7 @@
 # Created by: PyQt5 UI code generator 5.7
 #
 # WARNING! All changes made in this file will be lost!
+# Reference link for csv file: https://stackabuse.com/reading-and-writing-csv-files-in-python/
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
