@@ -116,7 +116,7 @@ class Ui_TemperatureQT(object):
         self.comboBox.currentIndexChanged.connect(self.selectionchange)
         self.storeData()
         self.timer = QTimer()
-        #self.timer.timeout.connect(self.getCurrTime)
+        self.timer.timeout.connect(self.getCurrTime)
         self.timer.timeout.connect(self.storeData)
         self.timer.timeout.connect(self.plotGraph)
         self.timer.start(5000)
