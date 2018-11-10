@@ -215,8 +215,8 @@ class Ui_TemperatureQT(object):
 
     def getCurrTime(self):
         current = datetime.datetime.now()
-        self.lineEdit_3.setText(current.strftime("%m/%d/%Y %H:%M"))
-        return current.strftime("%m/%d/%Y %H:%M")
+        self.lineEdit_3.setText(current.strftime("%m/%d/%Y %H:%M:%S"))
+        return current.strftime("%m/%d/%Y %H:%M:%S")
 
     def selectionchange(self):
         text = str(self.comboBox.currentText())
@@ -264,17 +264,6 @@ class Ui_TemperatureQT(object):
 
 
 if __name__ == "__main__":
-    mqtt_aws_client = None
-    client_name = 'sensor_rpi'
-    host = 'a1qcmx85kdext1.iot.us-east-2.amazonaws.com'
-    rootCAPath = './certificates/root-CA.crt'
-    key_private = './certificates/ri-mma.private.key'
-    certificatePath = './certificates/rpi-mma.cert.pem'
-    topic = 'aws_eidproject3'
-    mqtt_aws_client = aws(client_name)
-    mqtt_aws_client.configureEndpoint(host, 8883)
-    mqtt_aws_client.configureCredentials(rootCAPath, key_private, certificatePath)
-    mqtt_aws_client.connect()
     app = QtWidgets.QApplication(sys.argv)
     TemperatureQT = QtWidgets.QMainWindow()
     ui = Ui_TemperatureQT()
