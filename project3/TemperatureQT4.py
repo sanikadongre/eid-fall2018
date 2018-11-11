@@ -155,6 +155,9 @@ class Ui_TemperatureQT(object):
         if humidity and temperature is not None:
             temp_data = '{0:.2f}'.format(temperature)
             humid_data = '{0:.2f}'.format(humidity)
+            pydata = {'Temperature': temp_data, 'Humidity': humid_data}
+            jsondata = json.dumps(pydata)
+            mqtt_aws.publish(data_check, jsondata, 1)
             self.lineEdit.setText('{0:.2f}'.format((temperature*self.mult_factor)+ self.add_factor) + self.temp_unit)
             self.lineEdit_2.setText(humid_data  + '%')
 
@@ -196,8 +199,8 @@ class Ui_TemperatureQT(object):
             self.lineEdit_6.setText('{0:.2f}'.format((self.min_temp*self.mult_factor)+self.add_factor)+self.temp_unit)
             self.lineEdit_7.setText('{0:.2f}'.format(self.min_humid)+'%')
 
-            self.all_temp.append(temperature)                          #Append temperature data in array
-            self.all_humidity.append(humidity)                         #Append humidity data in array
+            self.all_temp.append(temperature)                          
+            self.all_humidity.append(humidity)                         
 
             #Writing acquired values to temphumid_data.csv file
             with open('temphumid_data.csv', 'a', newline = '') as comfile:
@@ -264,6 +267,18 @@ class Ui_TemperatureQT(object):
 
 
 if __name__ == "__main__":
+    
+    mqtt_aws = None
+    name_client = "temperature_humidity"
+    host = "aj11ebg4qpvwo-ats.iot.us-east-1.amazonaws.com"
+    rootCAPath = "./certificates/AmazonRootCA1.pem"
+    privateKeyPath = "./certificates/9cf1a4f30f-private.pem.key"
+    certificatePath = "./certificates/9cf1a4f30f-certificate.pem.crt"
+    data_check = "temphumid"
+    mqtt_aws = aws(name_client)
+    mqtt_aws.configureEndpoint(host,8883)
+    mqtt_aws.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
+    mqtt_aws.connect()
     app = QtWidgets.QApplication(sys.argv)
     TemperatureQT = QtWidgets.QMainWindow()
     ui = Ui_TemperatureQT()
