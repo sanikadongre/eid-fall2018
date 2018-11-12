@@ -270,10 +270,10 @@ if __name__ == "__main__":
     
     mqtt_aws = None
     name_client = "temperature_humidity"
-    host = "aj11ebg4qpvwo-ats.iot.us-east-1.amazonaws.com"
-    rootCAPath = "./certificates/AmazonRootCA1.pem"
-    privateKeyPath = "./certificates/9cf1a4f30f-private.pem.key"
-    certificatePath = "./certificates/9cf1a4f30f-certificate.pem.crt"
+    host = "abb1xpjvw6x95-ats.iot.us-east-1.amazonaws.com"
+    rootCAPath = "./certificates2/AmazonRootCA1.pem"
+    privateKeyPath = "./certificates2/f2de2b0af7-private.pem.key"
+    certificatePath = "./certificates2/f2de2b0af7-certificate.pem.crt"
     data_check = "temphumid"
     mqtt_aws = aws(name_client)
     mqtt_aws.configureEndpoint(host,8883)

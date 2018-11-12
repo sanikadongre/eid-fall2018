@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Client Side for AWS with graphical Client Project
-# Made by Mukund Madhusudan Atre and Anirudh Tiwari
 
 import json
 import sys
@@ -17,7 +14,7 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.sqs = boto3.resource('sqs')
         # Call the queue by name
-        self.queue = self.sqs.get_queue_by_name(QueueName='temperature_humidity_queue')
+        self.queue = self.sqs.get_queue_by_name(QueueName='temperature_humidity_data')
         self.max_temp_list=[]
         self.min_temp_list=[]
         self.curr_temp_list=[]

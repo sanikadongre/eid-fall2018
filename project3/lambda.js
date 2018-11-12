@@ -56,7 +56,7 @@ exports.handler = (event, context, callback) => {
     var params = {
      DelaySeconds: 0,
      MessageBody: "{ \"curr_temp\": " + curr_temp +", " + " \"avg_temp\": " + avg_temp + "," + "\"max_temp\": " + max_temp + "," + "\"min_temp\": " + min_temp + "," +"\"curr_humid\": " + curr_humid + "," + "\"avg_humid\": " + avg_humid + "," + "\"max_humid\": " + max_humid + "," + "\"min_humid\": " + min_humid + "}",
-     QueueUrl: "https://sqs.us-east-1.amazonaws.com/275213791663/temperature_humidity_queue"
+     QueueUrl: "https://sqs.us-east-1.amazonaws.com/332513045733/temperature_humidity_data"
     };
 
     //Message sending
