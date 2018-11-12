@@ -8,7 +8,7 @@ In this project, both the client and server rpis are interfaced to QT GUI. The s
 Required Elements: All Done
 
 The server file is: TemperatureQT4.py
-and the client file is: client.py
+and the client file is: graph_viewer.py
 
 Project References: 
 
