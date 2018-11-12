@@ -1,5 +1,8 @@
 Project 3 – AWS – MQTT
+
 Individual project by – SANIKA DONGRE
+
+
 In this project, both the client and server rpis are interfaced to QT GUI. The sensor side rpi is connected to the DHT22 sensor. The data is sent to the AWS in a JSON format. The library used for this purpose is: AWS-IOT-PYTHON-SDK. In the AWS first, a thing is created and it gets data from server side which can be viewed by test option in AWS. The lambda function is used to calculate 8 values (Min, Max, Latest, Average for temperature and humidity respectively). The lambda function is linked with thing using two rules pick_temperature and pick_humidity. The SQS queue is created and by creating a role the lambda function data is sent to the SQS queue. The data from the Queue is fetched by making use of credentials found in IAM account and using the boto library. The data fetched from the queue is displayed on the client-side QT interface. This client-side QT interface displays 4-line graphs for Max, Min, Current and Average readings for temperature and humidity). The data is displayed for over last 30 values and the graph lines are clearly labeled and distinguished using colors. 
 
 The server file is: TemperatureQT4.py
