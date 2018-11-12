@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 # Reference for csv file: https://stackabuse.com/reading-and-writing-csv-files-in-python/
+#Reference for MQTT: https://opensource.com/article/18/6/mqtt
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient as aws

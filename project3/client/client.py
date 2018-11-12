@@ -1,29 +1,32 @@
+#Project3 : client.py
+#Date created: 11/12/2018
+#Reference links: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/sqs.html
+#sqs: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html
 
-import json
-import sys
-import time
 import datetime
 import matplotlib.pyplot as plt
 import boto3
 import ast
 import matplotlib
+import json
+import sys
+import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
 
     def __init__(self):
         self.sqs = boto3.resource('sqs')
-        # Call the queue by name
-        self.queue = self.sqs.get_queue_by_name(QueueName='temperature_humidity_data')
-        self.max_temp_list=[]
-        self.min_temp_list=[]
-        self.curr_temp_list=[]
-        self.avg_temp_list=[]
-        self.max_humid_list=[]
-        self.min_humid_list=[]
-        self.curr_humid_list=[]
-        self.avg_humid_list=[]
-        self.num_readings = 0
+        self.queue = self.sqs.get_queue_by_name(QueueName='temperature_humidity_data') #get queue by name
+        self.max_temperature_data=[]
+        self.min_temperature_data=[]
+        self.present_temperature_data=[]
+        self.avg_temperature_data=[]
+        self.max_humidity_data=[]
+        self.min_humidity_data=[]
+        self.current_humidity_data=[]
+        self.avg_humidity_data=[]
+        self.readings = 0
         self.mult_factor = 1.0
         self.add_factor = 0.0
         self.unit = " C\n"
@@ -38,13 +41,13 @@ class Ui_MainWindow(object):
         self.RequestData.setAutoFillBackground(False)
         self.RequestData.setObjectName("RequestData")
         self.FahrenheitToCelcius = QtWidgets.QRadioButton(self.centralWidget)
-        self.FahrenheitToCelcius.setGeometry(QtCore.QRect(60, 210, 70, 27))
+        self.FahrenheitToCelcius.setGeometry(QtCore.QRect(60, 210, 100, 27))
         self.FahrenheitToCelcius.setObjectName("FahrenheitToCelcius")
         self.CtoFlabel = QtWidgets.QLabel(self.centralWidget)
         self.CtoFlabel.setGeometry(QtCore.QRect(30, 310, 210, 21))
         self.CtoFlabel.setObjectName("CtoFlabel")
         self.CelciusToFahrenhite = QtWidgets.QRadioButton(self.centralWidget)
-        self.CelciusToFahrenhite.setGeometry(QtCore.QRect(60, 350, 75, 27))
+        self.CelciusToFahrenhite.setGeometry(QtCore.QRect(60, 350, 100, 27))
         self.CelciusToFahrenhite.setObjectName("CelsiusToFahrenheit")
         self.FtoClabel = QtWidgets.QLabel(self.centralWidget)
         self.FtoClabel.setGeometry(QtCore.QRect(30, 180, 210, 21))
@@ -57,9 +60,8 @@ class Ui_MainWindow(object):
         self.label.setWordWrap(True)
         self.label.setIndent(35)
         self.label.setObjectName("label")
-        # Message Box for displaying data/error messages
         self.MessageBox = QtWidgets.QTextEdit(self.centralWidget)
-        self.MessageBox.setGeometry(QtCore.QRect(760, 0, 531, 601))
+        self.MessageBox.setGeometry(QtCore.QRect(760, 0, 540, 801))
         self.MessageBox.setObjectName("MessageBox")
         self.label_2 = QtWidgets.QLabel(self.centralWidget)
         self.label_2.setGeometry(QtCore.QRect(630, 260, 67, 21))
@@ -72,7 +74,7 @@ class Ui_MainWindow(object):
         self.Close.setObjectName("Close")
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1316, 26))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 800, 14))
         self.menuBar.setObjectName("menuBar")
         MainWindow.setMenuBar(self.menuBar)
         self.mainToolBar = QtWidgets.QToolBar(MainWindow)
@@ -86,10 +88,9 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
 
         self.retranslateUi(MainWindow)
-        # Calling appropriate functions on different button clicks
         self.Close.clicked.connect(MainWindow.close)
         self.ClearMessage.clicked.connect(self.MessageBox.clear)
-        self.RequestData.clicked.connect(self.fetch_data)
+        self.RequestData.clicked.connect(self.get_data)
         self.FahrenheitToCelcius.clicked.connect(self.fah_to_cel)
         self.CelciusToFahrenhite.clicked.connect(self.cel_to_fah)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -97,104 +98,97 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.RequestData.setText(_translate("MainWindow", "Request Data"))
+        self.RequestData.setText(_translate("MainWindow", "Get Data"))
         self.FahrenheitToCelcius.setText(_translate("MainWindow", "F to  C"))
-        self.CtoFlabel.setText(_translate("MainWindow", "Change Scale to Fahrenheit"))
+        self.CtoFlabel.setText(_translate("MainWindow", "Celsius to Fahreinheit"))
         self.CelciusToFahrenhite.setText(_translate("MainWindow", "C to F"))
-        self.FtoClabel.setText(_translate("MainWindow", "Change Scale to Celsius"))
-        self.label.setText(_translate("MainWindow", "Weather Statistics"))
-        self.label_2.setText(_translate("MainWindow", "Message"))
-        self.ClearMessage.setText(_translate("MainWindow", "Clear Message"))
-        self.Close.setText(_translate("MainWindow", "Close"))
+        self.FtoClabel.setText(_translate("MainWindow", "Fahreinheit to Celsius"))
+        self.label.setText(_translate("MainWindow", "Temp Humid Graphical"))
+        self.label_2.setText(_translate("MainWindow", "Output"))
+        self.ClearMessage.setText(_translate("MainWindow", "Clear Data"))
+        self.Close.setText(_translate("MainWindow", "Exit"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
 
 
 
-    def fetch_data(self):
-        # Receive message from SQS queue
-        queuelist = []
+    def get_data(self):
+        queue_list = []
         for i in range(3):
-            offload_list = self.queue.receive_messages(MaxNumberOfMessages=10)
-            if not offload_list:
+            list_val = self.queue.receive_messages(MaxNumberOfMessages=10) # Receive 10 messages
+            if not list_val:
                 break
-        # Process messages by printing out body
-            for msg in offload_list:
-                msgbody = ast.literal_eval(msg.body)
-                queuelist.append(msgbody)
-        # delete the msg
-                msg.delete()
-                self.num_readings += 1
+            for msg in list_val:
+                msgbody = ast.literal_eval(msg.body)  # Appending of data
+                queue_list.append(msgbody)
+                msg.delete()    # To delete the msg
+                self.readings += 1
 
-        # Take out data from individual messages and classify them based on key
-        if queuelist:
-            for mesg in queuelist:
-                self.curr_temp_list.append(mesg["curr_temp"])
-                self.curr_humid_list.append(mesg["curr_humid"])
-                self.max_temp_list.append(mesg["max_temp"])
-                self.max_humid_list.append(mesg["max_humid"])
-                self.min_temp_list.append(mesg["min_temp"])
-                self.min_humid_list.append(mesg["min_humid"])
-                self.avg_temp_list.append(mesg["avg_temp"])
-                self.avg_humid_list.append(mesg["avg_humid"])
+       
+        if queue_list:
+            for mesg in queue_list:
+                self.present_temperature_data.append(mesg["curr_temp"])
+                self.current_humidity_data.append(mesg["curr_humid"])
+                self.max_temperature_data.append(mesg["max_temp"])
+                self.max_humidity_data.append(mesg["max_humid"])
+                self.min_temperature_data.append(mesg["min_temp"])
+                self.min_humidity_data.append(mesg["min_humid"])
+                self.avg_temperature_data.append(mesg["avg_temp"])
+                self.avg_humidity_data.append(mesg["avg_humid"])
 
-            # generate message to be printed in Message Box
-            final_mesg=""
-            for max_t,min_t,curr_t,avg_t,max_h,min_h,curr_h,avg_h in zip(self.max_temp_list,\
-                self.min_temp_list,self.curr_temp_list, self.avg_temp_list, self.max_humid_list,\
-                self.min_humid_list, self.curr_humid_list, self.avg_humid_list):
+            output=""
+            for max_t,min_t,curr_t,avg_t,max_h,min_h,curr_h,avg_h in zip(self.max_temperature_data,\
+                self.min_temperature_data,self.present_temperature_data, self.avg_temperature_data, self.max_humidity_data,\
+                self.min_humidity_data, self.current_humidity_data, self.avg_humidity_data):
 
 
-                final_mesg +=   "Max Temp: {0:.2f}".format((max_t*self.mult_factor)+self.add_factor) + self.unit + \
-                                "Min Temp: {0:.2f}".format((min_t*self.mult_factor)+self.add_factor) + self.unit + \
-                                "Last Temp: {0:.2f}".format((curr_t*self.mult_factor)+self.add_factor) + self.unit + \
-                                "Avg Temp: {0:.2f}".format((avg_t*self.mult_factor)+self.add_factor) + self.unit + \
-                                "Max Hum: "+ str(max_h) + " %\n" + \
-                                "Min Hum: "+ str(min_h) + " %\n" + \
+                output+= "Last Temp: {0:.2f}".format((curr_t*self.mult_factor)+self.add_factor) + self.unit + \
                                 "Last Hum: "+ str(curr_h) + " %\n" + \
+                                "Max Temp: {0:.2f}".format((max_t*self.mult_factor)+self.add_factor) + self.unit + \
+                                "Max Hum: "+ str(max_h) + " %\n" + \
+                                "Min Temp: {0:.2f}".format((min_t*self.mult_factor)+self.add_factor) + self.unit + \
+                                "Min_Hum: "+str(min_h) + "%\n" + \
+                                "Avg Temp: {0:.2f}".format((avg_t*self.mult_factor)+self.add_factor) + self.unit + \
                                 "Avg Hum: "+ str(avg_h) + " %\n\n"
-
-
-            self.MessageBox.setText("Fetched Data:\n"  + final_mesg + "\nTimestamp: " + str(datetime.datetime.now()))
+            self.MessageBox.setText("Obtained Data:\n"  + output + "\nTimestamp: " + str(datetime.datetime.now()))
             self.plotGraph()
         # Error Handling
         else:
             self.MessageBox.setText("Error Fetching Data \n")
-
-
-    # Function for plotting graph of humidity and temperature separately
-    def plotGraph(self):
-        plt.plot(range(self.num_readings), self.max_temp_list, 'b-', label='Max Temp')
-        plt.plot(range(self.num_readings), self.min_temp_list, 'r-', label='Min Temp')
-        plt.plot(range(self.num_readings), self.curr_temp_list, 'y-', label='Last Temp')
-        plt.plot(range(self.num_readings), self.avg_temp_list, 'g-', label='Avg Temp')
-        plt.legend(loc='best')
-        plt.title('Temperature Analysis')
-        plt.ylabel('Temperature C')
-        plt.xlabel('num_readings')
-        plt.show()
-
-        plt.plot(range(self.num_readings), self.max_humid_list, 'b-', label='Max Hum')
-        plt.plot(range(self.num_readings), self.min_humid_list, 'r-', label='Min Hum')
-        plt.plot(range(self.num_readings), self.curr_humid_list, 'y-', label='Last Hum')
-        plt.plot(range(self.num_readings), self.avg_humid_list, 'g-', label='Avg Hum')
-        plt.legend(loc='best')
-        plt.title('Humidity Analysis')
-        plt.ylabel('Humidity %')
-        plt.xlabel('Number of readings')
-        plt.show()
-
+            
     # Unit conversion
     def cel_to_fah(self):
         self.mult_factor = 1.8
         self.add_factor = 32.0
         self.unit = " F\n"
 
-
     def fah_to_cel(self):
         self.mult_factor = 1.0
         self.add_factor = 0.0
         self.unit = " C\n"
 
+
+    # Function for plotting graph of humidity and temperature separately
+    def plotGraph(self):
+        plt.plot(range(self.readings), self.max_temperature_data, 'r-', label='Max Temp')  #red
+        plt.plot(range(self.readings), self.min_temperature_data, 'b-', label='Min Temp')  #blue
+        plt.plot(range(self.readings), self.present_temperature_data, 'g-', label='Last Temp')  #green
+        plt.plot(range(self.readings), self.avg_temperature_data, 'y-', label='Avg Temp')  #yellow
+        plt.legend(loc='best')
+        plt.title('Temperature Graph')
+        plt.ylabel('Temperature Celsius')
+        plt.xlabel('readings')
+        plt.show()
+        plt.plot(range(self.readings), self.max_humidity_data, 'r-', label='Max Hum')  #red
+        plt.plot(range(self.readings), self.min_humidity_data, 'b-', label='Min Hum')  #blue
+        plt.plot(range(self.readings), self.current_humidity_data, 'g-', label='Last Hum') #green
+        plt.plot(range(self.readings), self.avg_humidity_data, 'y-', label='Avg Hum') #yellow
+        plt.legend(loc='best')
+        plt.title('Humidity Graph')
+        plt.ylabel('Humidity %')
+        plt.xlabel('Number of readings')
+        plt.show()
+
+  
 
 if __name__ == "__main__":
     import sys
