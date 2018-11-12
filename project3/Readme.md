@@ -10,10 +10,15 @@ and the client file is: client.py
 
 Project References: 
 https://docs.aws.amazon.com/iot/latest/developerguide/view-mqtt-messages.html - To view the messages in monitor on AWS and test in AWS. 
+
 https://www.youtube.com/watch?v=y6W9QfiEY2E&t=4s – Registering a thing and observing in test (AWS)
-https://www.youtube.com/watch?v=Phzzk-cdF-g&t=400 – Creating lambda rule 
+
+https://www.youtube.com/watch?v=Phzzk-cdF-g&t=400 – Creating lambda rule youtube
+
 https://docs.aws.amazon.com/iot/latest/developerguide/iot-lambda-rule.html - To create lambda rule
+
 https://boto3.amazonaws.com/v1/documentation/api/latest/guide/sqs.html - For fetching the data using boto3
+
 https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html - IAM account creation and adding user to group and getting credentials.
 
 
