@@ -2,6 +2,8 @@ Project 4
 
 Communication Protocol Comparison
 
+Individual Project by: Sanika Dongre
+
 The round trip times for transferring message from client back to client via server for IoT protocols: MQTT, COAP  Websockets and AMQP are compared. 
 
 Description: 
