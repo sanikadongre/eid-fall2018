@@ -10,20 +10,21 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient as aws
 import json
 import os
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as mqtt #for mqtt
 import aiocoap.resource as resource
 from PyQt5.QtCore import QTimer
 import Adafruit_DHT             #importing this to get the Adafruit DHT22 libraries
 import sys
 import socket
-import aiocoap
+import pika #for amqp
+import aiocoap #for coap
 import ssl
 import asyncio
 import threading
 import numpy
 import datetime                 #importing this to get date and time of button push
 import tornado.httpserver
-import tornado.websocket
+import tornado.websocket #for websockets
 import tornado.ioloop
 import tornado.web
 import matplotlib.pyplot as pt1 #importing this to plot temperature and humidity graph
@@ -243,7 +244,8 @@ class Ui_TemperatureQT(object):
         mplot.plot(i,y,'r')
         mplot.title('Temperature Variation Graph')
         fig2.savefig('temp_plot.jpg')
-        
+
+#resouce blocking coap
 class resources_block(resource.Resource):
 
     def set_content(self, content):
@@ -253,6 +255,7 @@ class resources_block(resource.Resource):
        self.set_content(request.payload)
        return aiocoap.Message(code=aiocoap.CHANGED, payload=self.content)
     
+#system configurations
 def System_UI():
     app = QtWidgets.QApplication(sys.argv)
     TemperatureQT = QtWidgets.QMainWindow()
@@ -261,6 +264,7 @@ def System_UI():
     TemperatureQT.show()
     sys.exit(app.exec_())
     
+#coap server
 def Coap_server():
     loop_func = asyncio.new_event_loop()
     asyncio.set_event_loop(loop_func)
@@ -272,7 +276,7 @@ def Coap_server():
     loop_func = asyncio.get_event_loop()
     loop_func.run_forever()
     
-
+#mqtt function server side using mosquitto broker
 def func_mqtt():
     client = mqtt.Client()
     client.connect("test.mosquitto.org",1883,60)
@@ -286,7 +290,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     client.publish(down_topic, msg.payload);
-        
+
+#websocketshandler for websockets
 class WSHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print ('new connection for websocket started')
@@ -303,15 +308,28 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 application = tornado.web.Application([
     (r'/ws', WSHandler)])
 
+#websock server function
 def websocket_server():
     http_server = tornado.httpserver.HTTPServer(application)
-    myIP = '127.0.0.1'
-    port = 8888
-    http_server.listen(port, address='10.0.0.203')
-    print ('The Websocket server started at %s' % myIP)
+    ip_addr = '127.0.0.1' 
+    port = 8888 #port
+    http_server.listen(port, address='10.0.0.203') #ip address
+    print ('The Websocket server started at %s' % ip_addr)
     tornado.ioloop.IOLoop.instance().start()
+    
+#function for rabbitmq server
+def rabbitmq_server():
+    channel.queue_declare(queue='up_queue') #upqueue
+    channel.basic_consume(callback,queue='up_queue', no_ack=True)
+    channel.start_consuming()
+
+def callback(ch, method, properties, body):
+    channel.queue_declare(queue='down_queue') #downqueue
+    channel.basic_publish(exchange='', routing_key='down_queue', body= body )
         
 if __name__ == "__main__":
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost')) #connection using localhost
+    channel = connection.channel()
     mqtt_aws = None
     name_client = "temperature_humidity"
     host = "abb1xpjvw6x95-ats.iot.us-east-1.amazonaws.com"
@@ -325,20 +343,23 @@ if __name__ == "__main__":
     mqtt_aws.configureEndpoint(host,8883)
     mqtt_aws.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
     mqtt_aws.connect()
-    calcthread = []
+    calcthread = [] #threads for executing code parallely
     thread_ui = threading.Thread(target=System_UI)
     calcthread.append(thread_ui)
-    thread_ui.start()
+    thread_ui.start() 
     coapthread = threading.Thread(target=Coap_server)
     calcthread.append(coapthread)
     coapthread.daemon = True
-    coapthread.start()
+    coapthread.start() #coap thread
     mqtt_thread = threading.Thread(target=func_mqtt)
     calcthread.append(mqtt_thread)
     mqtt_thread.daemon = True
-    mqtt_thread.start()
+    mqtt_thread.start() #mqtt thread
     threadwebsocket = threading.Thread(target=websocket_server)
     calcthread.append(threadwebsocket)
     threadwebsocket.daemon = True
-    threadwebsocket.start()
-    
+    threadwebsocket.start() #websockets thread
+    rabbitmq_thread = threading.Thread(target=rabbitmq_server)
+    calcthread.append(rabbitmq_thread)
+    rabbitmq_thread.daemon = True
+    rabbitmq_thread.start() #rabbitmq thread
