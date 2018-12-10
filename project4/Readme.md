@@ -15,7 +15,7 @@ Protocols Implemented:
 CoAP, Websockets, MQTT using mosquito broker and RabbitMQ using queue. 
 
 Extra Credit:
-RabbitMQ for localhost. 
+RabbitMQ 
 
 To run the code:
 
