@@ -12,9 +12,11 @@ Server: The DHT22 sensor is connected to Raspberry pi. The output of the sensor 
 
 
 Protocols Implemented:
+
 CoAP, Websockets, MQTT using mosquito broker and RabbitMQ using queue. 
 
 Extra Credit:
+
 RabbitMQ 
 
 To run the code:
