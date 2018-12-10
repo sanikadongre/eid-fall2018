@@ -1,4 +1,4 @@
-Project 4
+PROJECT 4
 
 Communication Protocol Comparison
 
